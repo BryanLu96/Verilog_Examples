@@ -1,0 +1,17 @@
+program automatic async_fifo_test(fif.TEST if_t)
+	
+	initial begin
+		//$timeformat(-9,0,"ns",5);
+		reset();
+	end
+
+	task reset();
+		$display("%t: Reset all signals.",$realtime);
+		if_t.rrst_n <= 1'b0;
+		if_t.wrst_n <= 1'b0;
+		repeat(2) @(if_t.cb_w);
+		if_t.cb_w.wrst_n <= 1'b1;
+		if_t.cb_r.rrst_n <= 1'b1;
+		repeat(2) @(if_t.cb_w);
+	endtask: reset
+endprogram: async_fifo_test
